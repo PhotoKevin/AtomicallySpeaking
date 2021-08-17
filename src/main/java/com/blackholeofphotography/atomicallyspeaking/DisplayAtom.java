@@ -202,6 +202,9 @@ public class DisplayAtom
 
          // Atomic Weight in Upper Right
          String atomicWeight = String.format ("%3.1f", this.AtomicWeight);
+         double fraction  = AtomicWeight - Math.floor (AtomicWeight);
+         if (fraction == 0.0)
+            atomicWeight = String.format ("[%d]", (int) Math.floor (AtomicWeight));
 
          layout = new TextLayout (atomicWeight, numberFont, g2.getFontRenderContext());
          Rectangle2D weightBounds = layout.getBounds ();

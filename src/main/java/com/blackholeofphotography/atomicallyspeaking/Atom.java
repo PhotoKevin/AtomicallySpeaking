@@ -68,8 +68,8 @@ public class Atom
    public Atom (int number, String symbol, String name, Float weight)
    {
       this.AtomicNo = number;
-      this.Symbol = symbol;
-      this.Name = name;
+      this.Symbol = symbol.trim ();
+      this.Name = name.trim ();
       this.AtomicWeight = weight;
    }
 
