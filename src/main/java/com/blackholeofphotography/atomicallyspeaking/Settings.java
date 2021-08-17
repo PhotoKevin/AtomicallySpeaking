@@ -39,16 +39,12 @@ public final class Settings
    public static String lastPhrase;
    public static WindowPrefs WindowPreferences;
    public static String fontName;
-   public static float weightBaseline;
-   public static int symbolBaseline;
-   public static float nameBaseline;
-   public static boolean centerSymbol;
-   public static boolean centerName;
    public static String lastSaveDirectory;
 
 
    public final static double SYMBOL_PROPORTION = 0.5;
    public final static double NAME_PROPORTION = 0.15;
+   public final static double NUMBER_PROPORTION = 0.15;
    public final static double STROKE_PROPORTION = 0.03;
    public final static double GAP_PROPORTION = 0.06;
 
@@ -70,9 +66,6 @@ public final class Settings
    private static final int DEFAULT_MAINWND_WIDTH = 474;
    private static final int DEFAULT_MAINWND_HEIGHT = 332;
 
-   
-
-
    /**
     * Get the Preferences root node.
     * @return The root node.
@@ -91,13 +84,6 @@ public final class Settings
       allowFakeElements = prefs.getBoolean (KEY_ALLOW_FAKES, true);
       allowHydrogenIsotopes = prefs.getBoolean (KEY_ALLOW_ISOTOPES, true);
       lastSaveDirectory = prefs.get (KEY_LAST_DIRECTORY, System.getProperty("user.home"));
-
-      nameBaseline = 1;
-      symbolBaseline = 650;
-      weightBaseline = 3;
-
-      centerSymbol = false;
-      centerName = true;
 
       WindowPreferences = getWindowPrefs ("main");
    }

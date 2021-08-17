@@ -26,7 +26,7 @@ package com.blackholeofphotography.atomicallyspeaking;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
@@ -113,14 +113,16 @@ public class DisplayAtom
    /**
     * Draw a standard Periodic Table square for the atom
     * @param g2 Graphics context to draw on
-    * @param x Upper left X coordinate of the enclosing box
-    * @param y Upper left X coordinate of the enclosing box
-    * @param width Width of the box
+    * @param xTileUL Upper left X coordinate of the enclosing box
+    * @param yTileUL Upper left Y coordinate of the enclosing box
+    * @param width Width of the box. Height = Width
     */
-   public void draw (SVGGraphics2D g2, int x, int y, int width)
+   public void draw (SVGGraphics2D g2, int xTileUL, int yTileUL, int width)
    {
       System.out.println ("Rendering " + getSymbol ());
 
+      int xCenter = xTileUL + width/2;
+      int yCenter = yTileUL + width/2;
 
       // Outer rectangle
       double thickness = width * Settings.STROKE_PROPORTION;
@@ -128,146 +130,85 @@ public class DisplayAtom
          thickness = 1;
       g2.setStroke (new BasicStroke ((int) thickness));
       g2.setColor (color);
-      g2.fillRect (x, y, width, width);
+      g2.fillRect (xTileUL, yTileUL, width, width);
       g2.setColor (Color.BLACK);
       // Take the stroke thickness into account so the final rectangle fits.
       int half = (int) Math.round (thickness / 2.0);
-      g2.drawRect (x+half, y+half, width-(int)thickness, width-(int)thickness);
+      g2.drawRect (xTileUL+half, yTileUL+half, width-(int)thickness, width-(int)thickness);
 
 
       // Normally to get a font of a given height, you'd do this math. But the SVGGraphics
       // is at 72.0 so that cancels out.
       //  double fontSize= h * 72.0 / Toolkit.getDefaultToolkit().getScreenResolution();
-      Font f = new Font (Settings.fontName, Font.PLAIN, (int) (width * Settings.SYMBOL_PROPORTION));
-      g2.setFont (f);
 
-      // We need a TextLayout to find out how large the string ends up
-      // and the various other goo
-      FontRenderContext frc = g2.getFontRenderContext();
+      Font symbolFont = new Font (Settings.fontName, Font.PLAIN, (int) (width * Settings.SYMBOL_PROPORTION));
+      g2.setFont (symbolFont);
 
-      var met = f.getLineMetrics ("Mg", frc);
-      var desc = met.getDescent ();
-      var symHeight = met.getAscent () + desc;
-      TextLayout layout = new TextLayout (getSymbol (), f, frc);
+      // Use Magnesium so we have a good Ascent and Descent
+      LineMetrics symbolMetrics = symbolFont.getLineMetrics ("Mg", g2.getFontRenderContext());
+      int descent = (int) symbolMetrics.getDescent ();
+      float symHeight = symbolMetrics.getAscent () + descent;
+      TextLayout layout = new TextLayout (getSymbol (), symbolFont, g2.getFontRenderContext());
 
-      Rectangle2D b = layout.getBounds ();
-      System.out.println (b.toString ());
+      Rectangle2D symbolBounds = layout.getBounds ();
+      System.out.println (symbolBounds.toString ());
 
-      // This works, but understanding why is a mess.
-      // The x,y supplied are the Upper Left of the rectangle.
-      // The coordinates supplied to drawString are for the left of the Base Line.
+      // Work out the begining of the base line.
+      // I'm not sure this is really the best math, but it looks good enough.
 
-      // As such this would put the Symbol in the lower left of the rectangle      
-      //    g2.drawString (Symbol, x-(int)b.getX (),  y+width-(int)(b.getHeight ()+b.getY ()));
-      // That's not where we want it though. We want it centered.
+      int ySymbol = yCenter+((int)symHeight /2) - descent;
+      int xSymbol = xCenter-((int)symbolBounds.getWidth ()/2);
 
+      g2.drawString (getSymbol (), xSymbol, ySymbol);
 
-      if (!Settings.centerSymbol)
-      {
-         int xCenter = x+width/2;
-         int yCenter = y+width/2;
-         met.getLeading ();
-         int ySymbol = yCenter+((int)symHeight /2);
-         int xSymbol = xCenter-((int)b.getWidth ()/2);
-
-//         g2.drawRect (xCenter-(int)b.getWidth ()/2, yCenter-(int)b.getHeight ()/2, (int) b.getWidth (), (int) b.getHeight ());
-         ySymbol -= desc;
-         g2.drawString (getSymbol (), xSymbol, ySymbol);
-      }
-      else
-      {
-         // Calculate the free space and divide it in half.
-         int xMargin = (int) (width - b.getWidth ()) / 2 ;
-         int yMargin = (int) (width - b.getHeight ()) / 2;
-
-
-         // You might think you could just do this, but it's wrong. It has to
-         // do with the descenders
-         // int xCenter = x+width/2;
-         // int yCenter = y+width/2;
-         // ySymbol = yCenter+((int)b.getHeight ()/2);
-         // xSymbol = xCenter-((int)b.getWidth ()/2);
-
-         // But it does get the bounding box correct.
-         // g2.drawRect (xCenter-(int)b.getWidth ()/2, yCenter-(int)b.getHeight ()/2, (int) b.getWidth (), (int) b.getHeight ());
-
-
-         int xSymbol = x-(int)b.getX ()+xMargin;
-         int ySymbol = y+width-(int)(b.getHeight ()+b.getY ())-yMargin;
-         System.out.println (ySymbol);
-
-
-
-         System.out.println (getSymbol () +" "+ xSymbol  +" "+  ySymbol);
-         g2.drawString (getSymbol (), xSymbol, ySymbol);
-
-         System.out.println (ySymbol);
-   //      g2.drawString (getSymbol (), xSymbol, ySymbol);
-      }
-
-
+      // Now do the same kind of thing for the Name
       if (!fake)
       {
-         var nameMetrics = f.getLineMetrics ("Mag", frc);
+         Font nameFont = new Font (Settings.fontName, Font.PLAIN, (int) (width*Settings.NAME_PROPORTION));
+         g2.setFont (nameFont);
 
-         // Now do the same kind of thing for the Name
-         f = new Font (Settings.fontName, Font.PLAIN, (int) (width*Settings.NAME_PROPORTION));
-         g2.setFont (f);
+         LineMetrics nameMetrics = nameFont.getLineMetrics ("Magnesium", g2.getFontRenderContext());
 
-         frc = g2.getFontRenderContext();
-         layout = new TextLayout (Name, f, frc);
+         layout = new TextLayout (Name, nameFont, g2.getFontRenderContext());
 
-         b = layout.getBounds ();
+         Rectangle2D nameBounds = layout.getBounds ();
 
-         int xMargin = (int) (width - b.getWidth ()) / 2 ;
-         //yMargin = (int) (width - b.getHeight ()) / 2;
+         int xName = (int) (xCenter - nameBounds.getWidth () / 2);
+         int yName = (int) (yTileUL + width - nameMetrics.getDescent () - nameMetrics.getLeading () - 2*thickness);
 
-         int xSymbol = x-(int)b.getX ()+xMargin;
-         int ySymbol = (int) (y + width 
-//- b.getHeight () 
-- nameMetrics.getDescent ()); // - nameMetrics.getLeading ());
-
-         g2.drawString (Name, xSymbol, ySymbol);
+         g2.drawString (Name, xName, yName);
       }
 
       if (!fake)
       {
-         // And the Atomic Weight
-         f = new Font (Settings.fontName, Font.PLAIN, (int) (width*Settings.NAME_PROPORTION));
-         g2.setFont (f);
-         frc = g2.getFontRenderContext();
-         String s = String.format ("%3.1f", this.AtomicWeight);
-         int zeroWidth = (int) new TextLayout ("0", f, frc).getBounds ().getWidth ();
+         Font numberFont = new Font (Settings.fontName, Font.PLAIN, (int) (width*Settings.NUMBER_PROPORTION));
+         g2.setFont (numberFont);
+         TextLayout zeroLayout = new TextLayout ("0", numberFont, g2.getFontRenderContext());
+         int zeroWidth = (int) zeroLayout.getBounds ().getWidth ();
 
-         layout = new TextLayout (s, f, frc);
-         b = layout.getBounds ();
+         int yNumbers = (int) (yTileUL + zeroLayout.getLeading () + zeroLayout.getAscent () + (int) 2*thickness);
+         int numberMargin = zeroWidth + (int) thickness;
 
-         int xSymbol = x+width - (int)b.getWidth () - (int) b.getX () - 1*zeroWidth;
-         int ySymbol = (int) (y + 2* b.getHeight ());
+         // Atomic Number in the Upper Left
+         String atomicNumber = String.format ("%d", this.AtomicNo);
 
-         g2.drawString (s, xSymbol, ySymbol);
-      }
+         layout = new TextLayout (atomicNumber, numberFont, g2.getFontRenderContext());
+         Rectangle2D numberBounds = layout.getBounds ();
 
-      // Finally the atomic Number in the Upper Left
-      if (!fake)
-      {
-         var numberMetrics = f.getLineMetrics ("000", frc);
-         f = new Font (Settings.fontName, Font.PLAIN, (int) (width*Settings.NAME_PROPORTION));
-         g2.setFont (f);
+         int xNumber = xTileUL + numberMargin - (int) numberBounds.getX ();
 
-         frc = g2.getFontRenderContext();
-         String s = String.format ("%d", this.AtomicNo);
-         int zeroWidth = (int) new TextLayout ("0", f, frc).getBounds ().getWidth ();
+         g2.drawString (atomicNumber, xNumber, yNumbers);
 
-         layout = new TextLayout (s, f, frc);
-         b = layout.getBounds ();
 
-         int xSymbol = x + (int) b.getX () + 1*zeroWidth;
-         int ySymbol = (int) (y + 2* b.getHeight () + numberMetrics.getLeading ());
+         // Atomic Weight in Upper Right
+         String atomicWeight = String.format ("%3.1f", this.AtomicWeight);
 
-//         ySymbol =  (int) (y + numberMetrics.getAscent () + numberMetrics.getLeading ());
+         layout = new TextLayout (atomicWeight, numberFont, g2.getFontRenderContext());
+         Rectangle2D weightBounds = layout.getBounds ();
 
-         g2.drawString (""+this.AtomicNo, xSymbol, ySymbol);
+         int xWeight = xTileUL+width - (int)weightBounds.getWidth () - numberMargin;
+
+         g2.drawString (atomicWeight, xWeight, yNumbers);
       }
    }
 
