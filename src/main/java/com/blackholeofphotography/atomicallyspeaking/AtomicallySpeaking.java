@@ -26,7 +26,6 @@ package com.blackholeofphotography.atomicallyspeaking;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -47,14 +45,11 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *
+ * Main class and entry point for AtomicallySpeaking
  * @author Kevin Nickerson
  */
 public class AtomicallySpeaking extends javax.swing.JFrame
 {
-   double docWidth = 2;
-   double docHeight = 1;
-
    /**
     * Creates new form AtomicallySpeaking
     */
@@ -82,7 +77,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
          }
       });
 
-      jTable1.getSelectionModel ().addListSelectionListener (new ListSelectionListener ()
+      tblPossibles.getSelectionModel ().addListSelectionListener (new ListSelectionListener ()
       {
 
          @Override
@@ -114,7 +109,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       pnlBottom = new javax.swing.JPanel();
       jSplitPane1 = new javax.swing.JSplitPane();
       jScrollPane2 = new javax.swing.JScrollPane();
-      jTable1 = new javax.swing.JTable();
+      tblPossibles = new javax.swing.JTable();
       jPanel1 = new javax.swing.JPanel();
       jSVGCanvas1 = new org.apache.batik.swing.JSVGCanvas();
       jMenuBar1 = new javax.swing.JMenuBar();
@@ -167,7 +162,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       jScrollPane2.setMinimumSize(new java.awt.Dimension(123, 123));
       jScrollPane2.setPreferredSize(new java.awt.Dimension(120, 122));
 
-      jTable1.setModel(new javax.swing.table.DefaultTableModel(
+      tblPossibles.setModel(new javax.swing.table.DefaultTableModel(
          new Object [][]
          {
 
@@ -197,20 +192,13 @@ public class AtomicallySpeaking extends javax.swing.JFrame
             return canEdit [columnIndex];
          }
       });
-      jTable1.setMinimumSize(new java.awt.Dimension(60, 63));
-      jTable1.getTableHeader().setReorderingAllowed(false);
-      jScrollPane2.setViewportView(jTable1);
+      tblPossibles.setMinimumSize(new java.awt.Dimension(60, 63));
+      tblPossibles.getTableHeader().setReorderingAllowed(false);
+      jScrollPane2.setViewportView(tblPossibles);
 
       jSplitPane1.setLeftComponent(jScrollPane2);
 
       jSVGCanvas1.setPreferredSize(new java.awt.Dimension(50, 50));
-      jSVGCanvas1.addComponentListener(new java.awt.event.ComponentAdapter()
-      {
-         public void componentResized(java.awt.event.ComponentEvent evt)
-         {
-            jSVGCanvas1ComponentResized(evt);
-         }
-      });
 
       javax.swing.GroupLayout jSVGCanvas1Layout = new javax.swing.GroupLayout(jSVGCanvas1);
       jSVGCanvas1.setLayout(jSVGCanvas1Layout);
@@ -331,11 +319,15 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       pack();
    }// </editor-fold>//GEN-END:initComponents
 
-  
+   /**
+    * Generate all of the possible representations of the text and
+    * and display on screen.
+    * @param text - The text to work from
+    */
    private void generatePossibilities (String text)
    {
       System.out.println ("Start generatePossibilities");
-      var dtm = (DefaultTableModel) this.jTable1.getModel ();
+      DefaultTableModel dtm = (DefaultTableModel) this.tblPossibles.getModel ();
       dtm.setRowCount (0);
       ArrayList<Phrase> possible = Phrase.generatePossibilities (text);
 
@@ -350,17 +342,20 @@ public class AtomicallySpeaking extends javax.swing.JFrame
              (Settings.allowFakeElements && Settings.allowHydrogenIsotopes))
             dtm.addRow(new Object[] {p, p.getScore ()});
       }
-      if (jTable1.getRowCount () > 0)
-         jTable1.setRowSelectionInterval (0, 0);
+      if (tblPossibles.getRowCount () > 0)
+         tblPossibles.setRowSelectionInterval (0, 0);
 
       System.out.println ("End generatePossibilities");
    }
 
+   /**
+    * Render and display the selected phrase.
+    */
    private void DisplaySelectedPhrase ()
    {
-      var dtm = (DefaultTableModel) jTable1.getModel ();
+      var dtm = (DefaultTableModel) tblPossibles.getModel ();
 
-      int row = jTable1.getSelectedRow ();
+      int row = tblPossibles.getSelectedRow ();
       if (row < 0)
          this.jSVGCanvas1.setDocument (null);
 
@@ -371,7 +366,10 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       }
    }
 
-
+   /**
+    * Render and display the supplied phrase
+    * @param p - The phrase to display
+    */
    private void DisplayPhrase (Phrase p)
    {
       String svgElement = p.toSVG ();
@@ -394,28 +392,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       }  
    }
 
-   private void rescale ()
-   {
-//      AffineTransform at = this.jSVGCanvas1.getRenderingTransform ();
-//      System.out.print (this.jSVGCanvas1.getWidth () +"x"+this.jSVGCanvas1.getHeight ());
-//      var rectSize = this.jSVGCanvas1.getVisibleRect ();
-//      
-//
-//
-//      double scaleFactorX = rectSize.getWidth () / docWidth;
-//      double scaleFactorY = this.jSVGCanvas1.getHeight () / docHeight;
-//
-//      if (this.jSVGCanvas1.getHeight () < docHeight)
-//         scaleFactorY = 1.0;
-//
-//      double scaleFactor = Math.min (scaleFactorX, scaleFactorY);
-//
-//      System.out.println (" -> " + scaleFactor);
-//      at.setToScale (scaleFactor, scaleFactor);
-//      this.jSVGCanvas1.setRenderingTransform (at, true);
-   }
-
-
 
    private void formWindowOpened(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowOpened
    {//GEN-HEADEREND:event_formWindowOpened
@@ -425,12 +401,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       this.mnuSettings.setVisible (false);
 
    }//GEN-LAST:event_formWindowOpened
-
-   private void jSVGCanvas1ComponentResized(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jSVGCanvas1ComponentResized
-   {//GEN-HEADEREND:event_jSVGCanvas1ComponentResized
-      //DrawMap ();
-      rescale ();
-   }//GEN-LAST:event_jSVGCanvas1ComponentResized
 
    private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
    {//GEN-HEADEREND:event_formWindowClosing
@@ -451,10 +421,10 @@ public class AtomicallySpeaking extends javax.swing.JFrame
 
    private void mnuSaveAsActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_mnuSaveAsActionPerformed
    {//GEN-HEADEREND:event_mnuSaveAsActionPerformed
-      int row = this.jTable1.getSelectedRow ();
+      int row = this.tblPossibles.getSelectedRow ();
       if (row >= 0)
       {
-         var dtm = (DefaultTableModel) jTable1.getModel ();
+         var dtm = (DefaultTableModel) tblPossibles.getModel ();
 
          Phrase phrase = (Phrase) dtm.getValueAt (row, 0);
          FileNameExtensionFilter filter = new FileNameExtensionFilter ("SVG Images", "svg");
@@ -551,6 +521,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       /* Create and display the form */
       java.awt.EventQueue.invokeLater (new Runnable ()
       {
+         @Override
          public void run ()
          {
             new AtomicallySpeaking ().setVisible (true);
@@ -565,7 +536,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
    private org.apache.batik.swing.JSVGCanvas jSVGCanvas1;
    private javax.swing.JScrollPane jScrollPane2;
    private javax.swing.JSplitPane jSplitPane1;
-   private javax.swing.JTable jTable1;
    private javax.swing.JMenuItem mnuAbout;
    private javax.swing.JCheckBoxMenuItem mnuAllowFakeElements;
    private javax.swing.JCheckBoxMenuItem mnuAllowIsotopes;
@@ -577,6 +547,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
    private javax.swing.JMenuItem mnuSettings;
    private javax.swing.JPanel pnlBottom;
    private javax.swing.JPanel pnlTop;
+   private javax.swing.JTable tblPossibles;
    private javax.swing.JTextField txtPhrase;
    // End of variables declaration//GEN-END:variables
 }
