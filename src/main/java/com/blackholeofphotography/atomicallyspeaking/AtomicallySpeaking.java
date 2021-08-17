@@ -143,8 +143,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
          }
       });
 
-      pnlTop.setBackground(new java.awt.Color(0, 255, 0));
-
       javax.swing.GroupLayout pnlTopLayout = new javax.swing.GroupLayout(pnlTop);
       pnlTop.setLayout(pnlTopLayout);
       pnlTopLayout.setHorizontalGroup(
@@ -163,8 +161,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       );
 
       getContentPane().add(pnlTop, java.awt.BorderLayout.PAGE_START);
-
-      pnlBottom.setBackground(new java.awt.Color(255, 255, 51));
 
       jSplitPane1.setDividerLocation(200);
 
@@ -207,8 +203,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
 
       jSplitPane1.setLeftComponent(jScrollPane2);
 
-      jSVGCanvas1.setBackground(new java.awt.Color(255, 0, 102));
-      jSVGCanvas1.setBorder(new javax.swing.border.MatteBorder(null));
       jSVGCanvas1.setPreferredSize(new java.awt.Dimension(50, 50));
       jSVGCanvas1.addComponentListener(new java.awt.event.ComponentAdapter()
       {
@@ -222,11 +216,11 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       jSVGCanvas1.setLayout(jSVGCanvas1Layout);
       jSVGCanvas1Layout.setHorizontalGroup(
          jSVGCanvas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-         .addGap(0, 436, Short.MAX_VALUE)
+         .addGap(0, 362, Short.MAX_VALUE)
       );
       jSVGCanvas1Layout.setVerticalGroup(
          jSVGCanvas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-         .addGap(0, 178, Short.MAX_VALUE)
+         .addGap(0, 180, Short.MAX_VALUE)
       );
 
       javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
