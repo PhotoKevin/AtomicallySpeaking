@@ -435,7 +435,8 @@ public class AtomicallySpeaking extends javax.swing.JFrame
    private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
    {//GEN-HEADEREND:event_formWindowClosing
       Settings.lastPhrase = txtPhrase.getText ();
-      if (!this.isMaximumSizeSet ())
+
+      if (this.getExtendedState() == NORMAL)
       {
          Settings.WindowPreferences.location = this.getLocation ();
          Settings.WindowPreferences.size = this.getSize ();
