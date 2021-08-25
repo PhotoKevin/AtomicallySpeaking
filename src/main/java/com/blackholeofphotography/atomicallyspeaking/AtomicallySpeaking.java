@@ -310,6 +310,13 @@ public class AtomicallySpeaking extends javax.swing.JFrame
 
       mnuAbout.setMnemonic('a');
       mnuAbout.setText("About");
+      mnuAbout.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(java.awt.event.ActionEvent evt)
+         {
+            mnuAboutActionPerformed(evt);
+         }
+      });
       mnuHelp.add(mnuAbout);
 
       jMenuBar1.add(mnuHelp);
@@ -478,6 +485,13 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       Settings.allowHydrogenIsotopes = mnuAllowIsotopes.getState ();
       this.generatePossibilities (this.txtPhrase.getText ());
    }//GEN-LAST:event_mnuAllowIsotopesStateChanged
+
+   private void mnuAboutActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_mnuAboutActionPerformed
+   {//GEN-HEADEREND:event_mnuAboutActionPerformed
+      var about = new dlgAbout (this, true);
+      about.setLocationRelativeTo (this);
+      about.setVisible (true);
+   }//GEN-LAST:event_mnuAboutActionPerformed
 
    /**
     * @param args the command line arguments
