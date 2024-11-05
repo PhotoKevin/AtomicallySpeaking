@@ -119,7 +119,7 @@ public class DisplayAtom
     */
    public void draw (SVGGraphics2D g2, int xTileUL, int yTileUL, int width)
    {
-      System.out.println ("Rendering " + getSymbol ());
+      // System.out.println ("Rendering " + getSymbol ());
 
       int xCenter = xTileUL + width/2;
       int yCenter = yTileUL + width/2;
@@ -151,7 +151,7 @@ public class DisplayAtom
       TextLayout layout = new TextLayout (getSymbol (), symbolFont, g2.getFontRenderContext());
 
       Rectangle2D symbolBounds = layout.getBounds ();
-      System.out.println (symbolBounds.toString ());
+      //System.out.println (symbolBounds.toString ());
 
       // Work out the begining of the base line.
       // I'm not sure this is really the best math, but it looks good enough.

@@ -333,7 +333,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
     */
    private void generatePossibilities (String text)
    {
-      System.out.println ("Start generatePossibilities");
+      //System.out.println ("Start generatePossibilities");
       DefaultTableModel dtm = (DefaultTableModel) this.tblPossibles.getModel ();
       dtm.setRowCount (0);
       ArrayList<Phrase> possible = Phrase.generatePossibilities (text);
@@ -352,7 +352,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       if (tblPossibles.getRowCount () > 0)
          tblPossibles.setRowSelectionInterval (0, 0);
 
-      System.out.println ("End generatePossibilities");
+      //System.out.println ("End generatePossibilities");
    }
 
    /**
