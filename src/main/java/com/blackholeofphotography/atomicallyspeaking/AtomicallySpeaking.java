@@ -105,7 +105,8 @@ public class AtomicallySpeaking extends javax.swing.JFrame
 
       jFileChooser1 = new javax.swing.JFileChooser();
       pnlTop = new javax.swing.JPanel();
-      txtPhrase = new javax.swing.JTextField();
+      jScrollPane1 = new javax.swing.JScrollPane();
+      txtPhrase = new javax.swing.JTextArea();
       pnlBottom = new javax.swing.JPanel();
       jSplitPane1 = new javax.swing.JSplitPane();
       jScrollPane2 = new javax.swing.JScrollPane();
@@ -138,21 +139,25 @@ public class AtomicallySpeaking extends javax.swing.JFrame
          }
       });
 
+      txtPhrase.setColumns(20);
+      txtPhrase.setRows(5);
+      jScrollPane1.setViewportView(txtPhrase);
+
       javax.swing.GroupLayout pnlTopLayout = new javax.swing.GroupLayout(pnlTop);
       pnlTop.setLayout(pnlTopLayout);
       pnlTopLayout.setHorizontalGroup(
          pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
          .addGroup(pnlTopLayout.createSequentialGroup()
             .addContainerGap()
-            .addComponent(txtPhrase, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
             .addContainerGap())
       );
       pnlTopLayout.setVerticalGroup(
          pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-         .addGroup(pnlTopLayout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(txtPhrase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTopLayout.createSequentialGroup()
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addContainerGap())
       );
 
       getContentPane().add(pnlTop, java.awt.BorderLayout.PAGE_START);
@@ -208,7 +213,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       );
       jSVGCanvas1Layout.setVerticalGroup(
          jSVGCanvas1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-         .addGap(0, 180, Short.MAX_VALUE)
+         .addGap(0, 135, Short.MAX_VALUE)
       );
 
       javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -217,13 +222,13 @@ public class AtomicallySpeaking extends javax.swing.JFrame
          jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
          .addGap(0, 438, Short.MAX_VALUE)
          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSVGCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+            .addComponent(jSVGCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
       );
       jPanel1Layout.setVerticalGroup(
          jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-         .addGap(0, 180, Short.MAX_VALUE)
+         .addGap(0, 135, Short.MAX_VALUE)
          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSVGCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+            .addComponent(jSVGCanvas1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))
       );
 
       jSplitPane1.setRightComponent(jPanel1);
@@ -352,7 +357,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
       if (tblPossibles.getRowCount () > 0)
          tblPossibles.setRowSelectionInterval (0, 0);
 
-      //System.out.println ("End generatePossibilities");
+      // System.out.printf ("End generatePossibilities %d\n", dtm.getRowCount ());
    }
 
    /**
@@ -548,6 +553,7 @@ public class AtomicallySpeaking extends javax.swing.JFrame
    private javax.swing.JMenuBar jMenuBar1;
    private javax.swing.JPanel jPanel1;
    private org.apache.batik.swing.JSVGCanvas jSVGCanvas1;
+   private javax.swing.JScrollPane jScrollPane1;
    private javax.swing.JScrollPane jScrollPane2;
    private javax.swing.JSplitPane jSplitPane1;
    private javax.swing.JMenuItem mnuAbout;
@@ -562,6 +568,6 @@ public class AtomicallySpeaking extends javax.swing.JFrame
    private javax.swing.JPanel pnlBottom;
    private javax.swing.JPanel pnlTop;
    private javax.swing.JTable tblPossibles;
-   private javax.swing.JTextField txtPhrase;
+   private javax.swing.JTextArea txtPhrase;
    // End of variables declaration//GEN-END:variables
 }

@@ -41,7 +41,7 @@ import org.jfree.graphics2d.svg.ViewBox;
 public class Phrase
    implements Cloneable 
 {
-   public String text = "";
+   public String text;
    public int position;
    public ArrayList<DisplayAtom> sequence = new ArrayList<> ();
 
@@ -235,7 +235,7 @@ public class Phrase
       float score = 0.0F;
       for (DisplayAtom atom : this.sequence)
       {
-         if (atom.isSpace ())
+         if (atom.isSpace () || atom.isNewLine ())
             score += 0.0F;
 
          else if (atom.getSymbol () == null)
@@ -270,24 +270,47 @@ public class Phrase
    {
       return (int) (Settings.GAP_PROPORTION * Settings.TILE_SIZE);
    }
+   
+   private int getNumberOfLines ()
+   {
+      int lines = 1;
+      for (int i=0; i<sequence.size (); i++)
+         if (sequence.get (i).isNewLine ())
+            lines += 1;
+      
+      return lines;
+   }
 
    public Dimension getBoundingBox ()
    {
       Dimension tileSize = getTileDimension();
-      return new Dimension ((tileSize.width+getTileGap()) * sequence.size (), tileSize.height);
+      int gap = (getNumberOfLines ()-1) * getTileGap ();
+      return new Dimension ((tileSize.width+getTileGap()) * sequence.size (), tileSize.height * getNumberOfLines () + gap);
    }
 
+   /**
+    * Render this phrase onto the graphics object
+    * @param g2 SVGGraphics2D to render upon.
+    */
    public void render (SVGGraphics2D g2)
    {
       int symWidth = Settings.TILE_SIZE;
       int xPosition = getTileGap ();
+      int yPosition = 0;
       for (int i=0; i< this.sequence.size (); i++)
       {
          DisplayAtom atom = this.sequence.get (i);
-         if (!atom.isSpace ())
-            atom.draw (g2, xPosition, 0, symWidth);
+         if (atom.isNewLine ())
+         {
+            yPosition += symWidth + getTileGap ();
+            xPosition = getTileGap ();
+         }
+         
+         else if (!atom.isSpace ())
+            atom.draw (g2, xPosition, yPosition, symWidth);
 
-         xPosition += Settings.TILE_SIZE + getTileGap ();
+         if (!atom.isNewLine ())
+            xPosition += Settings.TILE_SIZE + getTileGap ();
       }
    }
 

@@ -1,4 +1,4 @@
-AtomicNo,Symbol,Name,AtomicWeight,Red,Green,Blue
-1,D,Deuterium,2.01410177811 ,255,255,192
-1,T,Tritium,3.01604928 ,255,255,160
+AtomicNo,Symbol,Name,AtomicWeight,Red,Green,Blue,Isotope
+1,D,Deuterium,2.01410177811 ,255,255,192,1
+1,T,Tritium,3.01604928 ,255,255,160,1
 

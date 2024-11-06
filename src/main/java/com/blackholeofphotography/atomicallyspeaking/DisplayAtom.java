@@ -42,7 +42,8 @@ public class DisplayAtom
 {
    private boolean fake;
    private boolean space;
-   private final boolean isotope;
+   private boolean newline;
+   private boolean isotope;
    private final Color color;
 
    /**
@@ -55,10 +56,32 @@ public class DisplayAtom
       super (atom);
       fake = false;
       space = false;
+      newline = false;
       isotope = false;
       color = _color;
    }
+   
+   
+   /**
+   * Create a new DisplayAtom from the existing atom and set the color
+   * @param atom Base atom
+   * @param _color Color of the DisplayAtom
+   * @param _isotope T/F if this is an isotope
+   */
+   DisplayAtom (Atom atom, Color _color, boolean _isotope)
+   {
+      super (atom);
+      fake = false;
+      space = false;
+      newline = false;
+      isotope = _isotope;
+      color = _color;
+   }
 
+   public void setIsIsotope ()
+   {
+      isotope = true;
+   }
    /**
     * Determine if this is a fake atom
     * @return T/F
@@ -75,6 +98,15 @@ public class DisplayAtom
    public boolean isIsotope ()
    {
       return isotope;
+   }
+
+   /**
+    * Determine if this is a special newline atom.
+    * @return T/F
+    */
+   public boolean isNewLine ()
+   {
+      return newline;
    }
 
    /**
@@ -223,6 +255,19 @@ public class DisplayAtom
    {
       DisplayAtom atom = new DisplayAtom (new Atom (0, "", "Space", 0.0F), Color.WHITE);
       atom.space = true;
+
+      return atom;
+   }
+   
+   
+   /**
+    * Return a special newline atom to use as white space in a display
+    * @return A space atom
+    */
+   static public DisplayAtom getNewLineAtom ()
+   {
+      DisplayAtom atom = new DisplayAtom (new Atom (0, "", "Space", 0.0F), Color.WHITE);
+      atom.newline = true;
 
       return atom;
    }

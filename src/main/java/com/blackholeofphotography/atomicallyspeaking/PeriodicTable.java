@@ -85,7 +85,10 @@ public final class PeriodicTable
             if (tbl != null)
             {
                for (var pt : tbl)
-                  table.add (new DisplayAtom (new Atom (pt.AtomicNo, pt.Symbol, pt.Name, pt.AtomicWeight), new Color (pt.Red, pt.Blue, pt.Green)));
+               {
+                  DisplayAtom atom = new DisplayAtom (new Atom (pt.AtomicNo, pt.Symbol, pt.Name, pt.AtomicWeight), new Color (pt.Red, pt.Blue, pt.Green), pt.Isotope != 0);
+                  table.add (atom);
+               }
             }
 
             return table;
@@ -114,14 +117,18 @@ public final class PeriodicTable
 
    public static DisplayAtom getAtomBySymbol (String Symbol)
    {
-      if (Symbol.isBlank ())
+      if (Symbol.equals ("\n"))
+         return DisplayAtom.getNewLineAtom ();
+      else if (Symbol.isBlank ())
          return DisplayAtom.getSpaceAtom ();
 
       try
       {
          Optional<DisplayAtom> atom = periodicTable.stream ().filter (p -> p.getSymbol ().equalsIgnoreCase (Symbol)).findFirst ();
          if (atom.isEmpty ())
+         {
             atom = isotopeTable.stream ().filter (p -> p.getSymbol ().equalsIgnoreCase (Symbol)).findFirst ();
+         }
 
          if (atom.isPresent ())
             return atom.get ();

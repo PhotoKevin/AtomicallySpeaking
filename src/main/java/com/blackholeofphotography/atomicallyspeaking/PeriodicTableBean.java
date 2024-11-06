@@ -51,6 +51,8 @@ public class PeriodicTableBean
    protected int Green;
    @CsvBindByName
    protected int Blue;
+   @CsvBindByName
+   protected int Isotope;
 
    /**
     * Public constructor required by opencsv

@@ -84,7 +84,6 @@ public final class Settings
       allowFakeElements = prefs.getBoolean (KEY_ALLOW_FAKES, true);
       allowHydrogenIsotopes = prefs.getBoolean (KEY_ALLOW_ISOTOPES, true);
       lastSaveDirectory = prefs.get (KEY_LAST_DIRECTORY, System.getProperty("user.home"));
-
       WindowPreferences = getWindowPrefs ("main");
    }
 
